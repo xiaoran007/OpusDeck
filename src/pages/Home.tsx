@@ -3,25 +3,54 @@ import { useNavigate } from 'react-router-dom';
 import { AlbumCard } from '../components/AlbumCard';
 import { useAuthStore } from '../stores/useAuthStore';
 import { Album } from '../types';
-import { mockAlbums } from '../data/mock';
+
+const Section = ({ title, albums, onAlbumClick }: { title: string, albums: Album[], onAlbumClick: (a: Album) => void }) => {
+    if (albums.length === 0) return null;
+    return (
+        <section className="mb-12">
+            <div className="flex items-end justify-between mb-4 px-1">
+                <h2 className="text-2xl font-bold text-white">{title}</h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                {albums.slice(0, 5).map(album => (
+                    <AlbumCard key={album.id} album={album} onClick={onAlbumClick} />
+                ))}
+            </div>
+        </section>
+    );
+}
 
 export const HomePage = () => {
-  const { isAuthenticated, client } = useAuthStore();
+  const { client, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
   
-  const [albums, setAlbums] = useState<Album[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [newestAlbums, setNewestAlbums] = useState<Album[]>([]);
+  const [randomAlbums, setRandomAlbums] = useState<Album[]>([]);
+  // const [recentAlbums, setRecentAlbums] = useState<Album[]>([]); // "recent" in subsonic means recently played
 
   useEffect(() => {
-    const fetchAlbums = async () => {
+    const fetchData = async () => {
       if (!client || !isAuthenticated) return;
       
-      setIsLoading(true);
       try {
-        const res = await client.getAlbumList('newest', 20);
-        const apiAlbums = res.albumList.album || [];
-        
-        const mappedAlbums: Album[] = apiAlbums.map((item: any) => ({
+        // Fetch Newest
+        const newestRes = await client.getAlbumList('newest', 10);
+        setNewestAlbums(mapAlbums(newestRes.albumList.album || [], client));
+
+        // Fetch Random (for "Discover")
+        const randomRes = await client.getAlbumList('random', 10);
+        setRandomAlbums(mapAlbums(randomRes.albumList.album || [], client));
+
+      } catch (error) {
+        console.error("Failed to fetch home data:", error);
+      }
+    };
+
+    fetchData();
+  }, [client, isAuthenticated]);
+
+  const mapAlbums = (list: any[], client: any): Album[] => {
+      return list.map((item: any) => ({
           id: item.id,
           title: item.title || item.name, 
           artist: item.artist,
@@ -29,50 +58,34 @@ export const HomePage = () => {
           genre: item.genre,
           songCount: item.songCount || 0,
           coverArt: client.getCoverArtUrl(item.id)
-        }));
-        
-        setAlbums(mappedAlbums);
-      } catch (error) {
-        console.error("Failed to fetch albums:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAlbums();
-  }, [client, isAuthenticated]);
-
-  const displayAlbums = isAuthenticated ? albums : mockAlbums;
+      }));
+  }
 
   return (
-    <div className="p-8 max-w-[1920px] mx-auto">
-      <header className="mb-8 flex items-end justify-between border-b border-white/10 pb-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white mb-1">
-            {isAuthenticated ? 'Recently Added' : 'Demo Library'}
-          </h1>
-          <p className="text-neutral-400 text-sm">
-            {isAuthenticated ? 'Your latest collection from Navidrome' : 'Please login to see your music'}
-          </p>
-        </div>
-        <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
-          {displayAlbums.length} Albums
-        </div>
-      </header>
-      
-      {isLoading ? (
-        <div className="text-center py-20 text-neutral-500">Loading library...</div>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-          {displayAlbums.map((album) => (
-            <AlbumCard 
-              key={album.id} 
-              album={album} 
-              onClick={(album) => navigate(`/album/${album.id}`)}
-            />
-          ))}
-        </div>
-      )}
+    <div className="p-8 max-w-[1920px] mx-auto pb-24">
+        {/* Welcome Header */}
+        <h1 className="text-4xl font-bold mb-8 text-white">Listen Now</h1>
+
+        {isAuthenticated ? (
+            <>
+                <Section 
+                    title="New Releases" 
+                    albums={newestAlbums} 
+                    onAlbumClick={(a) => navigate(`/album/${a.id}`)} 
+                />
+                
+                <Section 
+                    title="Discover Something New" 
+                    albums={randomAlbums} 
+                    onAlbumClick={(a) => navigate(`/album/${a.id}`)} 
+                />
+            </>
+        ) : (
+             <div className="text-center py-20">
+                <h2 className="text-2xl font-semibold mb-4">Welcome to OpusDeck</h2>
+                <p className="text-neutral-400">Please login to access your library.</p>
+             </div>
+        )}
     </div>
   );
 };

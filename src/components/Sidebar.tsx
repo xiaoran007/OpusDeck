@@ -1,9 +1,22 @@
+import { useEffect, useState } from 'react';
 import { Home, Grid, Music, User, Search, ListMusic } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../stores/useAuthStore';
 
-const NavItem = ({ icon: Icon, label, active = false }: { icon: any, label: string, active?: boolean }) => (
-  <div className={`flex items-center space-x-3 px-3 py-2 rounded-md cursor-pointer transition-colors ${active ? 'bg-white/10 text-white' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
+interface NavItemProps {
+  icon: any;
+  label: string;
+  active?: boolean;
+  onClick?: () => void;
+}
+
+const NavItem = ({ icon: Icon, label, active = false, onClick }: NavItemProps) => (
+  <div 
+    onClick={onClick}
+    className={`flex items-center space-x-3 px-3 py-2 rounded-md cursor-pointer transition-colors select-none ${active ? 'bg-white/10 text-white' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}
+  >
     <Icon size={20} />
-    <span className="text-sm font-medium">{label}</span>
+    <span className="text-sm font-medium truncate">{label}</span>
   </div>
 );
 
@@ -11,7 +24,34 @@ const SectionHeader = ({ title }: { title: string }) => (
   <h3 className="px-3 mb-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider mt-6">{title}</h3>
 );
 
+interface Playlist {
+    id: string;
+    name: string;
+}
+
 export const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { client, isAuthenticated } = useAuthStore();
+  
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+        if (!client || !isAuthenticated) return;
+        try {
+            const res = await client.getPlaylists();
+            const list = res.playlists?.playlist || [];
+            setPlaylists(list);
+        } catch (e) {
+            console.error("Failed to fetch playlists", e);
+        }
+    };
+    fetchPlaylists();
+  }, [client, isAuthenticated]);
+
+  const currentPath = location.pathname;
+
   return (
     <div className="w-64 bg-app-sidebar flex-shrink-0 flex flex-col h-full border-r border-app-divider pt-4 pb-20">
       <div className="px-5 mb-6">
@@ -26,20 +66,55 @@ export const Sidebar = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto px-2">
-        <NavItem icon={Home} label="Home" />
-        <NavItem icon={Grid} label="Browse" />
-        <NavItem icon={ListMusic} label="Radio" />
+        <NavItem 
+            icon={Home} 
+            label="Home" 
+            active={currentPath === '/'} 
+            onClick={() => navigate('/')}
+        />
+        
+        {/* Placeholder for future features */}
+        {/* <NavItem icon={Grid} label="Browse" /> */}
+        {/* <NavItem icon={ListMusic} label="Radio" /> */}
 
         <SectionHeader title="Library" />
-        <NavItem icon={Music} label="Recently Added" active />
-        <NavItem icon={User} label="Artists" />
-        <NavItem icon={Grid} label="Albums" />
-        <NavItem icon={Music} label="Songs" />
-
+        <NavItem 
+            icon={Music} 
+            label="Recently Added" 
+            active={currentPath === '/library/recent'} 
+            onClick={() => navigate('/library/recent')}
+        />
+        
+        {/* For now, Artists and Albums also point to Recent or could show a 'Not Implemented' toast */}
+        <NavItem 
+            icon={User} 
+            label="Artists" 
+            onClick={() => navigate('/library/artists')}
+            active={currentPath === '/library/artists'}
+        /> 
+        <NavItem 
+            icon={Grid} 
+            label="Albums" 
+            onClick={() => navigate('/library/albums')}
+            active={currentPath === '/library/albums'}
+        />
+        
         <SectionHeader title="Playlists" />
-        <NavItem icon={ListMusic} label="Classical Essentials" />
-        <NavItem icon={ListMusic} label="Late Night Piano" />
-        <NavItem icon={ListMusic} label="Focus" />
+        {playlists.length === 0 ? (
+            <div className="px-3 py-2 text-xs text-neutral-600 italic">
+                {isAuthenticated ? 'No playlists found' : 'Login to see playlists'}
+            </div>
+        ) : (
+            playlists.map(pl => (
+                <NavItem 
+                    key={pl.id}
+                    icon={ListMusic}
+                    label={pl.name}
+                    onClick={() => navigate(`/playlist/${pl.id}`)}
+                    active={currentPath === `/playlist/${pl.id}`}
+                />
+            ))
+        )}
       </div>
     </div>
   );
