@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Play, Clock, ArrowLeft, Shuffle, Music } from 'lucide-react';
+import { Play, ArrowLeft, Shuffle } from 'lucide-react';
 import { useAuthStore } from '../stores/useAuthStore';
 import { usePlayerStore } from '../stores/usePlayerStore';
 import { Album, Song } from '../types';
+import { TrackList } from '../components/TrackList';
 
 const formatDuration = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -15,7 +16,7 @@ export const AlbumDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { client, isAuthenticated } = useAuthStore();
-  const { playAlbum, currentSong, isPlaying } = usePlayerStore();
+  const { playAlbum } = usePlayerStore();
 
   const [album, setAlbum] = useState<Album | null>(null);
   const [songs, setSongs] = useState<Song[]>([]);
@@ -111,7 +112,7 @@ export const AlbumDetailPage = () => {
 
           {/* Info */}
           <div className="flex flex-col gap-3 pb-2 flex-1 min-w-0">
-            <h4 className="text-sm font-medium text-accent uppercase tracking-wider">{album.genre || 'Classical'}</h4>
+            <h4 className="text-sm font-medium text-accent uppercase tracking-wider">{album.genre || 'Music'}</h4>
             <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">{album.title}</h1>
             <div className="flex items-center gap-2 text-xl text-white/90">
                <span className="font-medium hover:underline cursor-pointer">{album.artist}</span>
@@ -137,60 +138,9 @@ export const AlbumDetailPage = () => {
           </div>
         </div>
 
-        {/* Tracklist */}
+        {/* Tracklist Component */}
         <div className="w-full">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="text-xs text-neutral-500 border-b border-white/10">
-                <th className="px-4 py-3 font-medium w-12 text-center">#</th>
-                <th className="px-4 py-3 font-medium">Title</th>
-                <th className="px-4 py-3 font-medium text-right w-24">
-                  <Clock className="w-4 h-4 ml-auto" />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {songs.map((song, index) => {
-                const isCurrentSong = currentSong?.id === song.id;
-
-                return (
-                  <tr 
-                    key={song.id} 
-                    onDoubleClick={() => handlePlaySong(index)}
-                    className={`
-                      group hover:bg-white/5 transition-colors cursor-default select-none rounded-lg
-                      ${isCurrentSong ? 'bg-white/10' : ''}
-                    `}
-                  >
-                    <td className="px-4 py-3 text-sm text-neutral-500 text-center w-12 rounded-l-lg group-hover:text-white">
-                      {isCurrentSong && isPlaying ? (
-                        <Music className="w-4 h-4 mx-auto text-accent animate-pulse" /> // Ideally an equalizer animation
-                      ) : (
-                        <span className="group-hover:hidden">{index + 1}</span>
-                      )}
-                      <button 
-                        className={`hidden group-hover:block mx-auto ${isCurrentSong ? 'text-accent' : 'text-white'}`}
-                        onClick={() => handlePlaySong(index)}
-                      >
-                         <Play className="w-3 h-3 fill-current" />
-                      </button>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className={`text-sm font-medium truncate ${isCurrentSong ? 'text-accent' : 'text-white'}`}>
-                        {song.title}
-                      </div>
-                      <div className="text-xs text-neutral-500 group-hover:text-neutral-400">
-                        {song.artist}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-neutral-500 text-right rounded-r-lg font-variant-numeric tabular-nums">
-                      {formatDuration(song.duration)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+            <TrackList songs={songs} onPlaySong={handlePlaySong} />
         </div>
       </div>
     </div>

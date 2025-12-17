@@ -87,7 +87,7 @@ export class SubsonicClient {
     return this.request<{}>('ping');
   }
 
-  public async getAlbumList(type: 'newest' | 'random' | 'frequent' | 'recent' = 'newest', size = 20) {
+  public async getAlbumList(type: 'newest' | 'random' | 'frequent' | 'recent' | 'alphabeticalByName' | 'alphabeticalByArtist' | 'starred' = 'newest', size = 20) {
     return this.request<{ albumList: { album: any[] } }>('getAlbumList', { type, size });
   }
   
@@ -97,6 +97,19 @@ export class SubsonicClient {
 
   public async getPlaylists() {
     return this.request<{ playlists: { playlist: any[] } }>('getPlaylists');
+  }
+
+  public async getPlaylist(id: string) {
+    return this.request<{ playlist: any }>('getPlaylist', { id });
+  }
+
+  public async getArtists() {
+    // Navidrome/Subsonic returns artists grouped by index (A, B, C...)
+    return this.request<{ artists: { index: Array<{ name: string, artist: any[] }> } }>('getArtists');
+  }
+
+  public async getArtist(id: string) {
+    return this.request<{ artist: any }>('getArtist', { id });
   }
 
   public getStreamUrl(id: string): string {

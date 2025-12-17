@@ -4,14 +4,11 @@ import { RootLayout } from './layouts/RootLayout';
 import { HomePage } from './pages/Home';
 import { RecentlyAddedPage } from './pages/RecentlyAdded';
 import { AlbumDetailPage } from './pages/AlbumDetail';
+import { ArtistsPage } from './pages/Artists';
+import { ArtistDetailPage } from './pages/ArtistDetail';
+import { AlbumsPage } from './pages/Albums';
+import { PlaylistDetailPage } from './pages/PlaylistDetail';
 import { useAuthStore } from './stores/useAuthStore';
-
-// Simple placeholder for WIP pages
-const WorkInProgress = ({ title }: { title: string }) => (
-    <div className="flex items-center justify-center h-full text-neutral-500 text-lg">
-        {title} - Coming Soon
-    </div>
-);
 
 function App() {
   const { initialize } = useAuthStore();
@@ -27,11 +24,12 @@ function App() {
           <Route index element={<HomePage />} />
           
           <Route path="library/recent" element={<RecentlyAddedPage />} />
-          <Route path="library/artists" element={<WorkInProgress title="Artists" />} />
-          <Route path="library/albums" element={<WorkInProgress title="All Albums" />} />
+          <Route path="library/artists" element={<ArtistsPage />} />
+          <Route path="artist/:id" element={<ArtistDetailPage />} />
+          <Route path="library/albums" element={<AlbumsPage />} />
           
           <Route path="album/:id" element={<AlbumDetailPage />} />
-          <Route path="playlist/:id" element={<WorkInProgress title="Playlist Detail" />} />
+          <Route path="playlist/:id" element={<PlaylistDetailPage />} />
           
           {/* Catch all redirect to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
