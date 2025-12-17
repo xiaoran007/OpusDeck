@@ -1,8 +1,9 @@
+import React from 'react';
 import { Sidebar } from './components/Sidebar';
 import { PlayerBar } from './components/PlayerBar';
 import { AlbumCard } from './components/AlbumCard';
-import { mockAlbums } from './data/mock';
-import { usePlayerStore } from './stores/usePlayerStore';
+import { albums } from './data/mockData';
+import { usePlayerStore } from './store/useStore';
 
 function App() {
   const { currentAlbum } = usePlayerStore();
@@ -14,6 +15,7 @@ function App() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 bg-[#1e1e1e]">
+        {/* Header / Top Bar area could go here */}
         
         {/* Scrollable Content */}
         <main className={`flex-1 overflow-y-auto p-8 ${currentAlbum ? 'pb-24' : ''}`}>
@@ -24,12 +26,12 @@ function App() {
                 <p className="text-neutral-400 text-sm">Your latest classical acquisitions</p>
               </div>
               <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
-                {mockAlbums.length} Albums
+                {albums.length} Albums
               </div>
             </header>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-              {mockAlbums.map((album) => (
+              {albums.map((album) => (
                 <AlbumCard key={album.id} album={album} />
               ))}
             </div>

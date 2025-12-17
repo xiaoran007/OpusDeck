@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #1e1e1e;
+  background-color: #1e1e1e; /* Fallback purely for debugging/loading */
   @apply bg-app-bg text-white antialiased overflow-hidden;
 }
 

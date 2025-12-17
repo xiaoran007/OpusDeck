@@ -1,15 +1,11 @@
+import React from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, Repeat, Shuffle, List } from 'lucide-react';
-import { usePlayerStore } from '../stores/usePlayerStore';
+import { usePlayerStore } from '../store/useStore';
 
 export const PlayerBar = () => {
-  const { currentAlbum, isPlaying, pause, resume } = usePlayerStore();
+  const { currentAlbum, isPlaying, togglePlay } = usePlayerStore();
 
   if (!currentAlbum) return null;
-
-  const togglePlay = () => {
-    if (isPlaying) pause();
-    else resume();
-  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-[88px] bg-[#1e1e1e]/85 backdrop-blur-xl border-t border-white/5 px-6 grid grid-cols-3 items-center z-50">
@@ -17,7 +13,7 @@ export const PlayerBar = () => {
       {/* Track Info */}
       <div className="flex items-center space-x-4">
         <div className="w-12 h-12 rounded-md overflow-hidden shadow-md bg-neutral-800">
-          <img src={currentAlbum.coverArt} alt="Cover" className="w-full h-full object-cover" />
+          <img src={currentAlbum.coverUrl} alt="Cover" className="w-full h-full object-cover" />
         </div>
         <div>
           <h4 className="text-sm font-medium text-white line-clamp-1">{currentAlbum.title}</h4>

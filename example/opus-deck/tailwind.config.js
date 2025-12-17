@@ -7,10 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        'app-bg': '#1e1e1e',
-        'app-sidebar': '#141414',
+        // Apple Music Dark Mode inspired palette
+        'app-bg': '#1e1e1e', // Slightly lighter than pure black for depth
+        'app-sidebar': '#141414', // Darker sidebar
         'app-divider': '#2a2a2a',
-        'accent': '#fa233b',
+        'accent': '#fa233b', // Classic AM Red
       },
       fontFamily: {
         sans: [

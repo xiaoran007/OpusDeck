@@ -1,3 +1,4 @@
+import React from 'react';
 import { Home, Grid, Music, User, Search, ListMusic } from 'lucide-react';
 
 const NavItem = ({ icon: Icon, label, active = false }: { icon: any, label: string, active?: boolean }) => (
@@ -13,7 +14,7 @@ const SectionHeader = ({ title }: { title: string }) => (
 
 export const Sidebar = () => {
   return (
-    <div className="w-64 bg-app-sidebar flex-shrink-0 flex flex-col h-full border-r border-app-divider pt-4 pb-20">
+    <div className="w-64 bg-app-sidebar flex flex-col h-full border-r border-app-divider pt-4 pb-20">
       <div className="px-5 mb-6">
         <div className="relative">
           <Search className="absolute left-3 top-2.5 text-neutral-500" size={16} />
