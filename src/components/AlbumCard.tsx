@@ -4,14 +4,18 @@ import { usePlayerStore } from '../stores/usePlayerStore';
 
 interface AlbumCardProps {
   album: Album;
+  onClick?: (album: Album) => void;
 }
 
-export const AlbumCard = ({ album }: AlbumCardProps) => {
-  const { play, currentAlbum, isPlaying } = usePlayerStore();
+export const AlbumCard = ({ album, onClick }: AlbumCardProps) => {
+  const { currentAlbum, isPlaying } = usePlayerStore();
   const isCurrent = currentAlbum?.id === album.id;
 
   return (
-    <div className="group flex flex-col space-y-3 cursor-pointer p-3 rounded-xl hover:bg-white/5 transition-colors duration-300">
+    <div 
+      className="group flex flex-col space-y-3 cursor-pointer p-3 rounded-xl hover:bg-white/5 transition-colors duration-300"
+      onClick={() => onClick && onClick(album)}
+    >
       <div className="relative aspect-square overflow-hidden rounded-lg shadow-lg group-hover:shadow-2xl transition-all duration-300">
         <img 
           src={album.coverArt} 
@@ -23,7 +27,6 @@ export const AlbumCard = ({ album }: AlbumCardProps) => {
         {/* Play Overlay */}
         <div 
           className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-200 ${isCurrent && isPlaying ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-          onClick={() => play(album)}
         >
           <div className="w-12 h-12 bg-accent/90 rounded-full flex items-center justify-center backdrop-blur-sm hover:scale-105 transition-transform">
             <Play fill="white" className="ml-1 text-white" size={20} />

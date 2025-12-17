@@ -1,9 +1,10 @@
 version: "3"
 services:
+  # The Backend: Navidrome Music Server
   navidrome:
     image: deluan/navidrome:latest
-    container_name: navidrome_dev
-    user: 1000:1000 # Run as current user (adjust ID if needed)
+    container_name: navidrome
+    user: 1000:1000 
     ports:
       - "4533:4533"
     environment:
@@ -11,9 +12,22 @@ services:
       ND_LOGLEVEL: info
       ND_SESSIONTIMEOUT: 24h
       ND_BASEURL: ""
+      # Important: Enable CORS so the frontend can talk to it from a different port/domain
+      ND_CORS_ENABLED: "true" 
+      ND_CORS_ALLOWORIGINS: "*" 
       ND_ENABLETRANSCODINGCONFIG: "true"
       ND_IMAGECACHESIZE: "100MB"
     volumes:
       - "./data/navidrome:/data"
       - "./music:/music:ro"
     restart: unless-stopped
+
+  # The Frontend: OpusDeck
+  opus-deck:
+    image: xiaoran007/opus-deck:latest
+    container_name: opus_deck
+    ports:
+      - "8080:80" # Access at http://localhost:8080
+    restart: unless-stopped
+    depends_on:
+      - navidrome

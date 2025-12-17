@@ -58,7 +58,8 @@ export class SubsonicClient {
   }
 
   // Generic request method
-  private async request<T>(endpoint: string, params: Record<string, string | number> = {}): Promise<T> {
+  // Changing to public to allow flexible usage if needed, though specific methods are better
+  public async request<T>(endpoint: string, params: Record<string, string | number> = {}): Promise<T> {
     const fullUrl = this.buildUrl(endpoint, params);
     
     try {
@@ -86,7 +87,7 @@ export class SubsonicClient {
     return this.request<{}>('ping');
   }
 
-  public async getAlbumList(type: 'newest' | 'random' | 'frequent' | 'recent' = 'newest', size = 20) {
+  public async getAlbumList(type: 'newest' | 'random' | 'frequent' | 'recent' | 'alphabeticalByName' | 'alphabeticalByArtist' | 'starred' = 'newest', size = 20) {
     return this.request<{ albumList: { album: any[] } }>('getAlbumList', { type, size });
   }
   
@@ -94,13 +95,28 @@ export class SubsonicClient {
     return this.request<{ album: any }>('getAlbum', { id });
   }
 
-  // Helper to get image URL directly (for <img src />)
-  public getCoverArtUrl(id: string, size = 600) {
-    return this.buildUrl('getCoverArt', { id, size });
+  public async getPlaylists() {
+    return this.request<{ playlists: { playlist: any[] } }>('getPlaylists');
   }
 
-  // Helper to get stream URL directly (for <audio src />)
-  public getStreamUrl(id: string) {
+  public async getPlaylist(id: string) {
+    return this.request<{ playlist: any }>('getPlaylist', { id });
+  }
+
+  public async getArtists() {
+    // Navidrome/Subsonic returns artists grouped by index (A, B, C...)
+    return this.request<{ artists: { index: Array<{ name: string, artist: any[] }> } }>('getArtists');
+  }
+
+  public async getArtist(id: string) {
+    return this.request<{ artist: any }>('getArtist', { id });
+  }
+
+  public getStreamUrl(id: string): string {
     return this.buildUrl('stream', { id });
+  }
+  
+  public getCoverArtUrl(id: string, size = 300): string {
+    return this.buildUrl('getCoverArt', { id, size });
   }
 }
