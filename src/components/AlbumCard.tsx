@@ -1,6 +1,5 @@
 import { Play } from 'lucide-react';
 import { Album } from '../types';
-import { cn } from '../utils/cn'; // Need to create this utility or use inline clsx
 
 interface AlbumCardProps {
   album: Album;
