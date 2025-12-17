@@ -1,27 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { PlayerBar } from './components/PlayerBar';
 import { AlbumCard } from './components/AlbumCard';
 import { LoginModal } from './components/LoginModal';
+import { AudioController } from './components/AudioController';
 import { usePlayerStore } from './stores/usePlayerStore';
 import { useAuthStore } from './stores/useAuthStore';
 import { Album } from './types';
 import { mockAlbums } from './data/mock';
 
 function App() {
-  const { currentAlbum } = usePlayerStore();
+  const { currentAlbum, playAlbum } = usePlayerStore();
   const { initialize, isAuthenticated, client } = useAuthStore();
   
-  // Local state for albums (switch between mock and real)
   const [albums, setAlbums] = useState<Album[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 1. Initialize Auth on Mount
   useEffect(() => {
     initialize();
   }, [initialize]);
 
-  // 2. Fetch Albums when Client is ready
   useEffect(() => {
     const fetchAlbums = async () => {
       if (!client || !isAuthenticated) return;
@@ -31,15 +29,13 @@ function App() {
         const res = await client.getAlbumList('newest', 20);
         const apiAlbums = res.albumList.album || [];
         
-        // Transform API response to our App's Album type
         const mappedAlbums: Album[] = apiAlbums.map((item: any) => ({
           id: item.id,
-          title: item.title || item.name, // Subsonic sometimes uses 'name' for dirs
+          title: item.title || item.name, 
           artist: item.artist,
           year: item.year,
           genre: item.genre,
           songCount: item.songCount || 0,
-          // Generate Cover Art URL
           coverArt: client.getCoverArtUrl(item.id)
         }));
         
@@ -54,15 +50,53 @@ function App() {
     fetchAlbums();
   }, [client, isAuthenticated]);
 
-  // Fallback to mock data if not authenticated (or purely for dev preview)
-  // For this "Production-like" stage, we might want to show empty state instead.
-  // But let's keep mock as fallback only if albums is empty AND not loading?
-  // Actually, let's strictly use API data if authenticated.
   const displayAlbums = isAuthenticated ? albums : mockAlbums;
+
+  // Handle Play Click (Fetch details then play)
+  const handlePlayAlbum = async (album: Album) => {
+    if (!client || !isAuthenticated) {
+       // Mock play for unauthenticated
+       return; 
+    }
+    
+    try {
+        console.log("Fetching album details for:", album.id);
+        // Fetch Album Details (to get songs)
+        const res = await client.getAlbum(album.id);
+        console.log("Album details:", res);
+        
+        let rawSongs = res.album.song || [];
+        // Handle single song object response from Subsonic
+        if (!Array.isArray(rawSongs)) {
+            rawSongs = [rawSongs];
+        }
+        
+        // Map songs to our type
+        const mappedSongs = rawSongs.map((s: any) => ({
+            id: s.id,
+            title: s.title,
+            artist: s.artist,
+            album: s.album,
+            duration: s.duration,
+            trackNumber: s.track,
+        }));
+        
+        console.log("Mapped songs:", mappedSongs);
+
+        if (mappedSongs.length > 0) {
+            playAlbum(album, mappedSongs);
+        } else {
+            console.warn("No songs found in album");
+        }
+    } catch (e) {
+        console.error("Failed to play album", e);
+    }
+  };
 
   return (
     <div className="flex h-screen bg-app-bg text-white font-sans overflow-hidden selection:bg-accent/30 selection:text-white">
       <LoginModal />
+      <AudioController />
       
       {/* Sidebar */}
       <Sidebar />
@@ -92,7 +126,11 @@ function App() {
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
                 {displayAlbums.map((album) => (
-                  <AlbumCard key={album.id} album={album} />
+                  <AlbumCard 
+                    key={album.id} 
+                    album={album} 
+                    onClick={() => handlePlayAlbum(album)}
+                  />
                 ))}
               </div>
             )}
