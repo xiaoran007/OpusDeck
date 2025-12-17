@@ -7,9 +7,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        border: "var(--border)",
+        background: "#1e1e1e", // App Background
+        sidebar: "#141414",    // Sidebar Background
+        accent: "#fa233b",     // Classic Red
+        border: "#2a2a2a",     // Borders
       },
       fontFamily: {
         sans: [
@@ -20,9 +21,6 @@ export default {
           "Helvetica",
           "Arial",
           "sans-serif",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "Segoe UI Symbol",
         ],
       }
     },

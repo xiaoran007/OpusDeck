@@ -9,34 +9,32 @@ interface AlbumCardProps {
 export const AlbumCard = ({ album, onClick }: AlbumCardProps) => {
   return (
     <div 
-      className="group relative flex flex-col gap-2 cursor-pointer transition-transform duration-300 hover:scale-[1.02]"
+      className="group relative flex flex-col gap-3 cursor-pointer"
       onClick={() => onClick(album)}
     >
-      <div className="relative aspect-square rounded-lg overflow-hidden shadow-md bg-neutral-800">
+      <div className="relative aspect-square rounded-lg overflow-hidden bg-neutral-800 shadow-lg group-hover:shadow-xl transition-all duration-300">
         <img 
           src={album.coverArt} 
           alt={album.title}
-          className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-80"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           loading="lazy"
         />
         
-        {/* Play Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
-          <div className="p-3 bg-white/20 backdrop-blur-md rounded-full border border-white/30 text-white hover:scale-110 transition-transform">
-            <Play className="w-8 h-8 fill-current translate-x-0.5" />
-          </div>
+        {/* Play Overlay - Apple Style */}
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+             {/* Red Play Button */}
+            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform">
+               <Play className="w-5 h-5 fill-white text-white translate-x-0.5" />
+            </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-0.5 px-0.5">
-        <h3 className="font-medium text-sm text-white leading-tight truncate" title={album.title}>
+      <div className="flex flex-col gap-0.5">
+        <h3 className="font-medium text-[13px] text-white leading-tight truncate" title={album.title}>
           {album.title}
         </h3>
-        <p className="text-xs text-neutral-400 truncate" title={album.artist}>
+        <p className="text-[13px] text-neutral-400 truncate" title={album.artist}>
           {album.artist}
-        </p>
-        <p className="text-[10px] text-neutral-500 uppercase tracking-wider">
-          {album.year} • {album.genre}
         </p>
       </div>
     </div>
