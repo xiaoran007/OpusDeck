@@ -118,3 +118,7 @@ dist
 
 # Mac
 .DS_Store
+
+# Local Navidrome Data
+music/
+data/
