@@ -1,0 +1,19 @@
+version: "3"
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome_dev
+    user: 1000:1000 # Run as current user (adjust ID if needed)
+    ports:
+      - "4533:4533"
+    environment:
+      ND_SCANSCHEDULE: 1m
+      ND_LOGLEVEL: info
+      ND_SESSIONTIMEOUT: 24h
+      ND_BASEURL: ""
+      ND_ENABLETRANSCODINGCONFIG: "true"
+      ND_IMAGECACHESIZE: "100MB"
+    volumes:
+      - "./data/navidrome:/data"
+      - "./music:/music:ro"
+    restart: unless-stopped
