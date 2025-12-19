@@ -1,6 +1,7 @@
 import React from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, Repeat, Shuffle, List, Speaker, Loader2 } from 'lucide-react';
 import { usePlayerStore } from '../stores/usePlayerStore';
+import { AudioBadge } from './AudioBadge';
 
 const formatTime = (seconds: number) => {
   if (!seconds || isNaN(seconds)) return '0:00';
@@ -22,39 +23,18 @@ export const PlayerBar = () => {
     next, 
     prev,
     seek,
-    setVolume
+    setVolume,
+    isQueueOpen,
+    toggleQueue
   } = usePlayerStore();
 
   if (!currentSong || !currentAlbum) return null;
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = parseFloat(e.target.value);
-    seek(time); // Update store state
-    
-    // We also need to tell the audio element to seek. 
-    // Currently AudioController listens to currentTime... wait.
-    // AudioController logic in Step 2 only updates currentTime FROM audio.
-    // It doesn't listen to currentTime state TO seek audio (that would cause loop).
-    // FIX: We need a specific 'seek' action or useEffect in AudioController.
-    // Or simpler: access the audio element directly? No, separation of concerns.
-    
-    // Let's modify AudioController to handle seeking via a specific trigger, 
-    // OR we can just hack it here by accessing the global audio if we exposed it, 
-    // BUT the cleanest way is adding a `seekTo` state or method in store.
-    
-    // Actually, let's inject the seek logic directly into AudioController via a ref or event,
-    // OR update AudioController to listen to a 'seekRequest' timestamp in store.
-    
-    // FOR NOW: Let's use the method: 
-    // AudioController will expose a global event or we use a store flag.
-    // Let's go with updating the store `currentTime` and having AudioController 
-    // distinguish between "update from audio" and "update from UI".
-    // Since that's complex, I will update AudioController in next step to handle this.
-    
-    // Update: I will implement a robust seek mechanism in AudioController using a timestamp ref check.
+    seek(time); 
   };
   
-  // Progress percentage for the gradient background
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
@@ -68,8 +48,12 @@ export const PlayerBar = () => {
               {/* Expand/Maximize icon could go here */}
           </div>
         </div>
-        <div className="min-w-0 overflow-hidden">
-          <h4 className="text-sm font-medium text-white truncate" title={currentSong.title}>{currentSong.title}</h4>
+        <div className="min-w-0 overflow-hidden flex flex-col justify-center">
+          <div className="flex items-center gap-2 max-w-full">
+            <h4 className="text-sm font-medium text-white truncate" title={currentSong.title}>{currentSong.title}</h4>
+            {/* Audio Quality Badge */}
+            <AudioBadge song={currentSong} variant="minimal" />
+          </div>
           <p className="text-xs text-neutral-400 truncate hover:text-white transition-colors cursor-pointer" title={currentSong.artist}>
             {currentSong.artist}
           </p>
@@ -125,7 +109,6 @@ export const PlayerBar = () => {
               min={0}
               max={duration || 100} // Avoid div by zero
               value={currentTime}
-              // We need to implement the seek action logic in AudioController to make this work
               onChange={handleSeek} 
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             />
@@ -148,7 +131,10 @@ export const PlayerBar = () => {
 
       {/* Volume / Extras */}
       <div className="flex items-center justify-end space-x-4">
-        <button className="text-neutral-400 hover:text-white">
+        <button 
+            className={`transition-colors ${isQueueOpen ? 'text-accent' : 'text-neutral-400 hover:text-white'}`}
+            onClick={toggleQueue}
+        >
           <List size={20} />
         </button>
         <div className="flex items-center space-x-2 w-28 group">

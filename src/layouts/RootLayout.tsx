@@ -3,6 +3,7 @@ import { Sidebar } from '../components/Sidebar';
 import { PlayerBar } from '../components/PlayerBar';
 import { LoginModal } from '../components/LoginModal';
 import { AudioController } from '../components/AudioController';
+import { QueueDrawer } from '../components/QueueDrawer';
 import { usePlayerStore } from '../stores/usePlayerStore';
 
 export const RootLayout = () => {
@@ -12,6 +13,7 @@ export const RootLayout = () => {
     <div className="flex h-screen bg-app-bg text-white font-sans overflow-hidden selection:bg-accent/30 selection:text-white">
       <LoginModal />
       <AudioController />
+      <QueueDrawer />
       
       {/* Sidebar */}
       <Sidebar />

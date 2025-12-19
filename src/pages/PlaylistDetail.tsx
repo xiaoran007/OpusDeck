@@ -35,6 +35,11 @@ export const PlaylistDetailPage = () => {
           album: s.album,
           duration: s.duration,
           trackNumber: s.track,
+          bitRate: s.bitRate,
+          suffix: s.suffix,
+          contentType: s.contentType,
+          bitDepth: s.bitDepth,
+          sampleRate: s.samplingRate
           // Playlist entries might have coverArt for the specific song
           // but our Song type doesn't stricly require it for playback (we fetch album art mostly)
         }));

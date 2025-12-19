@@ -35,6 +35,14 @@ export const Sidebar = () => {
   const { client, isAuthenticated } = useAuthStore();
   
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [searchValue, setSearchValue] = useState('');
+
+  // Clear search input when navigating away from search results
+  useEffect(() => {
+      if (!location.pathname.startsWith('/search')) {
+          setSearchValue('');
+      }
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -50,6 +58,12 @@ export const Sidebar = () => {
     fetchPlaylists();
   }, [client, isAuthenticated]);
 
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter' && searchValue.trim()) {
+          navigate(`/search?q=${encodeURIComponent(searchValue.trim())}`);
+      }
+  };
+
   const currentPath = location.pathname;
 
   return (
@@ -60,6 +74,9 @@ export const Sidebar = () => {
           <input 
             type="text" 
             placeholder="Search" 
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={handleSearch}
             className="w-full bg-[#262626] text-white text-sm pl-9 pr-3 py-2 rounded-lg border-none focus:ring-1 focus:ring-accent outline-none placeholder-neutral-500"
           />
         </div>
@@ -85,7 +102,6 @@ export const Sidebar = () => {
             onClick={() => navigate('/library/recent')}
         />
         
-        {/* For now, Artists and Albums also point to Recent or could show a 'Not Implemented' toast */}
         <NavItem 
             icon={User} 
             label="Artists" 
