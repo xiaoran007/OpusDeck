@@ -24,7 +24,7 @@ services:
 
   # The Frontend: OpusDeck
   opus-deck:
-    image: xiaoran007/opus-deck:latest
+    image: xiaoran007/opusdeck:latest
     container_name: opus_deck
     ports:
       - "8080:80" # Access at http://localhost:8080
