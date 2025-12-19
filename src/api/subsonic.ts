@@ -119,7 +119,7 @@ export class SubsonicClient {
   public getStreamUrl(id: string): string {
     // Request 'raw' format to prevent server-side transcoding.
     // Set maxBitRate to 0 (unlimited).
-    return this.buildUrl('stream', { id, format: 'raw', maxBitRate: 0, estimateContentLength: true });
+    return this.buildUrl('stream', { id, format: 'raw', maxBitRate: 0, estimateContentLength: 'true' });
   }
   
   public getCoverArtUrl(id: string, size = 300): string {
