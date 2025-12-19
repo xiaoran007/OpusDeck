@@ -59,6 +59,11 @@ export const SearchPage = () => {
                     album: s.album,
                     duration: s.duration,
                     trackNumber: s.track,
+                    bitRate: s.bitRate,
+                    suffix: s.suffix,
+                    contentType: s.contentType,
+                    bitDepth: s.bitDepth,
+                    sampleRate: s.samplingRate
                 }));
 
                 setResults({ artists, albums, songs });

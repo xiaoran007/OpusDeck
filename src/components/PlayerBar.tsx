@@ -1,6 +1,7 @@
 import React from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, Repeat, Shuffle, List, Speaker, Loader2 } from 'lucide-react';
 import { usePlayerStore } from '../stores/usePlayerStore';
+import { AudioBadge } from './AudioBadge';
 
 const formatTime = (seconds: number) => {
   if (!seconds || isNaN(seconds)) return '0:00';
@@ -47,8 +48,12 @@ export const PlayerBar = () => {
               {/* Expand/Maximize icon could go here */}
           </div>
         </div>
-        <div className="min-w-0 overflow-hidden">
-          <h4 className="text-sm font-medium text-white truncate" title={currentSong.title}>{currentSong.title}</h4>
+        <div className="min-w-0 overflow-hidden flex flex-col justify-center">
+          <div className="flex items-center gap-2 max-w-full">
+            <h4 className="text-sm font-medium text-white truncate" title={currentSong.title}>{currentSong.title}</h4>
+            {/* Audio Quality Badge */}
+            <AudioBadge song={currentSong} variant="minimal" />
+          </div>
           <p className="text-xs text-neutral-400 truncate hover:text-white transition-colors cursor-pointer" title={currentSong.artist}>
             {currentSong.artist}
           </p>

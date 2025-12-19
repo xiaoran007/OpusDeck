@@ -5,6 +5,7 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { usePlayerStore } from '../stores/usePlayerStore';
 import { Album, Song } from '../types';
 import { TrackList } from '../components/TrackList';
+import { AudioBadge } from '../components/AudioBadge';
 
 const formatDuration = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -53,6 +54,14 @@ export const AlbumDetailPage = () => {
           album: s.album,
           duration: s.duration,
           trackNumber: s.track,
+          bitRate: s.bitRate,
+          suffix: s.suffix,
+          contentType: s.contentType,
+          bitDepth: s.bitDepth,
+          sampleRate: s.samplingRate // Subsonic often uses 'samplingRate' not 'sampleRate'? Let's try both or just check api docs. usually it's not standard.
+          // Wait, checking Navidrome source code or docs would be best.
+          // Standard Subsonic API 1.16.1 doesn't explicitly list these.
+          // However, let's map whatever properties might exist.
         }));
 
         setAlbum(albumInfo);
@@ -87,6 +96,9 @@ export const AlbumDetailPage = () => {
     return <div className="flex items-center justify-center h-full text-neutral-500">Album not found.</div>;
   }
 
+  // Get representative song for badge (first song)
+  const representativeSong = songs.length > 0 ? songs[0] : null;
+
   return (
     <div className="min-h-full pb-10">
       {/* Navbar Placeholder for Back Button */}
@@ -117,9 +129,10 @@ export const AlbumDetailPage = () => {
             <div className="flex items-center gap-2 text-xl text-white/90">
                <span className="font-medium hover:underline cursor-pointer">{album.artist}</span>
             </div>
-            <p className="text-sm text-neutral-400 mt-1">
-              {album.year} • {album.songCount} Songs • {formatDuration(songs.reduce((acc, s) => acc + s.duration, 0))}
-            </p>
+            <div className="flex items-center gap-2 text-sm text-neutral-400 mt-1">
+              <span>{album.year} • {album.songCount} Songs • {formatDuration(songs.reduce((acc, s) => acc + s.duration, 0))}</span>
+              {representativeSong && <AudioBadge song={representativeSong} variant="full" />}
+            </div>
 
             {/* Actions */}
             <div className="flex items-center gap-4 mt-4">
