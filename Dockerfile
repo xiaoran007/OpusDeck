@@ -1,5 +1,7 @@
 # Stage 1: Build the React application
-FROM node:20-alpine AS builder
+# Use --platform=$BUILDPLATFORM to run the build on the runner's native architecture (amd64)
+# regardless of the target architecture. This avoids slow/buggy QEMU emulation for npm install.
+FROM --platform=$BUILDPLATFORM node:20-alpine AS builder
 
 WORKDIR /app
 
