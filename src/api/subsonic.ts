@@ -112,6 +112,10 @@ export class SubsonicClient {
     return this.request<{ artist: any }>('getArtist', { id });
   }
 
+  public async search3(query: string) {
+      return this.request<{ searchResult3: { artist?: any[], album?: any[], song?: any[] } }>('search3', { query });
+  }
+
   public getStreamUrl(id: string): string {
     return this.buildUrl('stream', { id });
   }
