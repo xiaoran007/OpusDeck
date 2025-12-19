@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import { Album, Song } from '../types';
 
 interface PlayerState {
+  // UI State
+  isQueueOpen: boolean;
+
   // Playback State
   isPlaying: boolean;
   isLoading: boolean;
@@ -24,12 +27,16 @@ interface PlayerState {
   togglePlay: () => void;
   setVolume: (vol: number) => void;
   seek: (time: number) => void;
+  toggleQueue: () => void;
   
   // Queue Management
   playAlbum: (album: Album, songs: Song[], startIndex?: number) => void;
   playSong: (song: Song) => void;
   next: () => void;
   prev: () => void;
+  jumpTo: (index: number) => void;
+  removeFromQueue: (index: number) => void;
+  clearQueue: () => void;
 
   // Internal (called by AudioController)
   setIsPlaying: (isPlaying: boolean) => void;
@@ -39,6 +46,8 @@ interface PlayerState {
 }
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
+  isQueueOpen: false,
+
   isPlaying: false,
   isLoading: false,
   volume: 1, 
@@ -56,10 +65,8 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
   
   setVolume: (volume) => set({ volume }),
-  
-  // When UI calls seek, we update current time immediately (for visual feedback)
-  // AND set a seekRequest that AudioController listens to.
   seek: (time) => set({ currentTime: time, seekRequest: time }),
+  toggleQueue: () => set((state) => ({ isQueueOpen: !state.isQueueOpen })),
 
   playAlbum: (album, songs, startIndex = 0) => {
     if (songs.length === 0) return;
@@ -119,6 +126,79 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
         duration: 0
       });
     }
+  },
+
+  jumpTo: (index) => {
+      const { queue } = get();
+      if (index >= 0 && index < queue.length) {
+          set({
+              currentIndex: index,
+              currentSong: queue[index],
+              isPlaying: true,
+              currentTime: 0,
+              duration: 0
+          });
+      }
+  },
+
+  removeFromQueue: (index) => {
+      const { queue, currentIndex } = get();
+      const newQueue = [...queue];
+      newQueue.splice(index, 1);
+      
+      let newIndex = currentIndex;
+      // If we removed the currently playing song, what to do?
+      // Usually play the next one (which is now at the same index)
+      // If we removed a song BEFORE current, current index needs to decrement
+      
+      if (index < currentIndex) {
+          newIndex--;
+      } else if (index === currentIndex) {
+          // If we removed current, play next (which falls into newIndex)
+          // Unless it was the last song
+          if (newQueue.length === 0) {
+              set({ 
+                  queue: [], 
+                  currentSong: null, 
+                  currentIndex: -1, 
+                  isPlaying: false 
+              });
+              return;
+          }
+          if (newIndex >= newQueue.length) {
+              newIndex = 0; // Loop back or stop? Let's stop effectively or go to start
+              // Better: just stop if we killed the last song
+              // For simplicity, let's just update queue. Audio might continue playing until track ends, 
+              // but state would be mismatched. 
+              // Let's force update current song.
+          }
+      }
+
+      // Sync state
+      const nextSong = newQueue[newIndex];
+      // If we changed the current song (because we removed it)
+      if (index === currentIndex) {
+           set({
+               queue: newQueue,
+               currentIndex: newIndex,
+               currentSong: nextSong,
+               // Keep playing if we removed current? Maybe.
+           });
+      } else {
+          set({
+              queue: newQueue,
+              currentIndex: newIndex
+          });
+      }
+  },
+
+  clearQueue: () => {
+      set({
+          queue: [],
+          currentIndex: -1,
+          currentSong: null,
+          isPlaying: false
+      });
   },
 
   setIsPlaying: (isPlaying) => set({ isPlaying }),
