@@ -1,32 +1,32 @@
 # OpusDeck
 
-OpusDeck is a modern, high-fidelity web client for [Navidrome](https://www.navidrome.org/) (and other Subsonic-compatible servers). Inspired by the aesthetics of Apple Music, it aims to provide a premium listening experience for your self-hosted music library.
+OpusDeck is a modern, high-fidelity web client for [Navidrome](https://www.navidrome.org/) and other Subsonic-compatible music servers.
+
+Inspired by the clean aesthetics of Apple Music, OpusDeck provides a premium listening experience for your self-hosted library, featuring a glassmorphism UI, gapless-style playback, and deep metadata visualization.
+
+> **Note**: This project is currently in early development (v0.2.0).
+
+![OpusDeck Screenshot](https://files.catbox.moe/s8bzu1.png)
 
 ## ✨ Features
 
-- **Modern UI/UX**: Glassmorphism effects, smooth transitions, and a clean dark mode design.
-- **Subsonic API Support**: Works with Navidrome, Gonic, Airsonic, etc.
-- **Library Management**:
+- **High-Fidelity UI**: Dark mode design with blur effects and smooth transitions.
+- **Detailed Metadata**: Visual badges for **Hi-Res**, **Lossless**, and bit-perfect audio details.
+- **Smart Library**:
   - **Home**: Personalized dashboard with "New Releases" and "Discover".
-  - **Recently Added**: Browse your latest additions.
-  - **Artists & Albums**: Complete library indexing with detail views.
-  - **Playlists**: Full support for viewing and playing server-side playlists.
-- **Advanced Playback**:
-  - Gapless-style audio control.
-  - Queue management (internal).
-  - Background audio support.
-- **Tech Stack**:
-  - **Framework**: React 18 + TypeScript + Vite
-  - **Styling**: Tailwind CSS
-  - **State Management**: Zustand (with persistence for auth)
-  - **Routing**: React Router DOM v6
-  - **Icons**: Lucide React
+  - **Queue Management**: Full control over your "Up Next" list.
+  - **Global Search**: Instantly find Artists, Albums, and Songs.
+  - **Playlists**: Full support for server-side playlists.
+- **Universal Access**: Works with Navidrome, Gonic, Airsonic-Advanced, etc.
 
-## 🚀 Deployment (Docker Compose)
+## 🚀 Getting Started
 
-The easiest way to run OpusDeck is using Docker Compose. This will start both a Navidrome server and the OpusDeck frontend.
+The easiest way to run OpusDeck is using Docker.
 
-1.  Create a `docker-compose.yml` file (or use the one in this repo):
+### Quick Start (Docker Compose)
+
+1.  Save the following as `docker-compose.yml`:
+
     ```yaml
     version: "3"
     services:
@@ -38,7 +38,7 @@ The easiest way to run OpusDeck is using Docker Compose. This will start both a 
           ND_SCANSCHEDULE: 1m
           ND_SESSIONTIMEOUT: 24h
           ND_BASEURL: ""
-          # Enable CORS for OpusDeck
+          # Essential for OpusDeck connection
           ND_CORS_ENABLED: "true" 
           ND_CORS_ALLOWORIGINS: "*" 
         volumes:
@@ -60,37 +60,16 @@ The easiest way to run OpusDeck is using Docker Compose. This will start both a 
     docker-compose up -d
     ```
 
-3.  Access OpusDeck at `http://localhost:8080`.
-    - **Note**: When logging in, enter your Navidrome URL. If running locally with the setup above, use `http://localhost:4533` (or your LAN IP if accessing from another device).
+3.  Open **`http://localhost:8080`** and log in with your Navidrome credentials.
 
-## 🛠 Development
+## 🤖 AI Disclaimer
 
-### Prerequisites
-
-1.  **Node.js**: v18 or higher.
-2.  **Navidrome Server**: A running instance.
-
-### Installation
-
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/xiaoran007/opus-deck.git
-    cd opus-deck
-    ```
-
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-
-3.  Start the development server:
-    ```bash
-    npm run dev
-    ```
+This project was built with the assistance of Large Language Models (LLMs).
+While the code has been reviewed and tested, it represents an exploration of AI-assisted software engineering.
 
 ## 🤝 Contributing
 
-This is an early MVP. Contributions, bug reports, and feature requests are welcome!
+Contributions, bug reports, and feature requests are welcome! Feel free to open an issue or submit a PR.
 
 ## 📄 License
 
