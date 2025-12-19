@@ -12,7 +12,9 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
+  # NOTE: Assuming your Docker Hub repo is xiaoran007/opusdeck (lowercase, matching GitHub repo usually but explicit override is safer if they differ)
+  # Actually, let's use the explicit image name since you mentioned it differs slightly (OpusDeck vs opusdeck)
+  IMAGE_NAME: xiaoran007/opusdeck
 
 jobs:
   build:
@@ -29,12 +31,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Set up Buildx for multi-platform builds (optional but recommended)
+      # Add QEMU support for multi-arch builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      # Set up Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       # Login against a Docker registry
-      # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v2
@@ -44,7 +49,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -55,12 +59,12 @@ jobs:
             type=semver,pattern={{version}}
 
       # Build and push Docker image with Buildx
-      # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v4
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

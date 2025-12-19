@@ -47,7 +47,7 @@ The easiest way to run OpusDeck is using Docker.
         restart: unless-stopped
 
       opus-deck:
-        image: xiaoran007/opus-deck:latest
+        image: xiaoran007/opusdeck:latest
         ports:
           - "8080:80"
         restart: unless-stopped
