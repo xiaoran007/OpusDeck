@@ -129,10 +129,16 @@ export const AlbumDetailPage = () => {
             <div className="flex items-center gap-2 text-xl text-white/90">
                <span className="font-medium hover:underline cursor-pointer">{album.artist}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-neutral-400 mt-1">
+            <div className="flex items-center gap-2 text-sm text-neutral-400 mt-1 font-medium">
               <span>{album.year} • {album.songCount} Songs • {formatDuration(songs.reduce((acc, s) => acc + s.duration, 0))}</span>
-              {representativeSong && <AudioBadge song={representativeSong} variant="full" />}
             </div>
+
+            {/* Audio Quality Badge - Apple Style: Independent Row */}
+            {representativeSong && (
+                <div className="mt-3 mb-1">
+                    <AudioBadge song={representativeSong} variant="album-header" />
+                </div>
+            )}
 
             {/* Actions */}
             <div className="flex items-center gap-4 mt-4">
