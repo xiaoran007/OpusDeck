@@ -125,4 +125,25 @@ export class SubsonicClient {
   public getCoverArtUrl(id: string, size = 300): string {
     return this.buildUrl('getCoverArt', { id, size });
   }
+
+  public async star(id?: string, albumId?: string, artistId?: string) {
+      const params: any = {};
+      if (id) params.id = id;
+      if (albumId) params.albumId = albumId;
+      if (artistId) params.artistId = artistId;
+      return this.request<{}>('star', params);
+  }
+
+  public async unstar(id?: string, albumId?: string, artistId?: string) {
+      const params: any = {};
+      if (id) params.id = id;
+      if (albumId) params.albumId = albumId;
+      if (artistId) params.artistId = artistId;
+      return this.request<{}>('unstar', params);
+  }
+
+  public async getStarred() {
+      // Returns lists of starred items (artist, album, song)
+      return this.request<{ starred: { artist?: any[], album?: any[], song?: any[] } }>('getStarred');
+  }
 }

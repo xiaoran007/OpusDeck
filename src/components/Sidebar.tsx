@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Home, Grid, Music, User, Search, ListMusic, Server } from 'lucide-react';
+import { Home, Grid, Music, User, Search, ListMusic, Heart } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
 
@@ -102,6 +102,13 @@ export const Sidebar = () => {
             onClick={() => navigate('/library/recent')}
         />
         
+        <NavItem 
+            icon={Heart} 
+            label="Favorites" 
+            active={currentPath === '/library/favorites'} 
+            onClick={() => navigate('/library/favorites')}
+        />
+
         <NavItem 
             icon={User} 
             label="Artists" 

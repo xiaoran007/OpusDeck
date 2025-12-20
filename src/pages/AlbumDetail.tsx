@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Play, ArrowLeft, Shuffle } from 'lucide-react';
+import { Play, ArrowLeft, Shuffle, Heart } from 'lucide-react';
 import { useAuthStore } from '../stores/useAuthStore';
 import { usePlayerStore } from '../stores/usePlayerStore';
 import { Album, Song } from '../types';
@@ -40,7 +40,8 @@ export const AlbumDetailPage = () => {
           year: data.year,
           genre: data.genre,
           songCount: data.songCount,
-          coverArt: client.getCoverArtUrl(data.id, 600)
+          coverArt: client.getCoverArtUrl(data.id, 600),
+          starred: data.starred
         };
         
         // Process Songs
@@ -86,6 +87,24 @@ export const AlbumDetailPage = () => {
     if (album) {
       playAlbum(album, songs, index);
     }
+  };
+
+  const toggleStar = async () => {
+      if (!album || !client) return;
+      
+      const isStarred = !!album.starred;
+      // Optimistic Update
+      setAlbum(prev => prev ? ({ ...prev, starred: isStarred ? undefined : new Date().toISOString() }) : null);
+
+      try {
+          if (isStarred) {
+              await client.unstar(undefined, album.id);
+          } else {
+              await client.star(undefined, album.id);
+          }
+      } catch (e) {
+          console.error("Failed to toggle star", e);
+      }
   };
 
   if (loading) {
@@ -152,6 +171,13 @@ export const AlbumDetailPage = () => {
               <button className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg flex items-center gap-2 transition-colors active:scale-95">
                 <Shuffle className="w-5 h-5" />
                 Shuffle
+              </button>
+              <button 
+                onClick={toggleStar}
+                className={`p-3 rounded-lg flex items-center justify-center transition-colors active:scale-95 border ${album.starred ? 'bg-accent/10 border-accent/20 text-accent' : 'bg-white/5 border-white/10 text-neutral-400 hover:text-white hover:bg-white/10'}`}
+                title={album.starred ? "Unfavorite Album" : "Favorite Album"}
+              >
+                <Heart className={`w-5 h-5 ${album.starred ? 'fill-current' : ''}`} />
               </button>
             </div>
           </div>
