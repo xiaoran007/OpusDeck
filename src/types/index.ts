@@ -24,5 +24,6 @@ export interface Album {
   year?: number;
   genre?: string;
   songCount: number;
+  starred?: string; // ISO Date string if starred
   songs?: Song[];
 }

@@ -9,6 +9,8 @@ import { ArtistDetailPage } from './pages/ArtistDetail';
 import { AlbumsPage } from './pages/Albums';
 import { PlaylistDetailPage } from './pages/PlaylistDetail';
 import { SearchPage } from './pages/Search';
+import { FavoritesPage } from './pages/Favorites';
+import Settings from './pages/Settings';
 import { useAuthStore } from './stores/useAuthStore';
 
 function App() {
@@ -25,8 +27,10 @@ function App() {
           <Route index element={<HomePage />} />
           
           <Route path="search" element={<SearchPage />} />
+          <Route path="settings" element={<Settings />} />
           
           <Route path="library/recent" element={<RecentlyAddedPage />} />
+          <Route path="library/favorites" element={<FavoritesPage />} />
           <Route path="library/artists" element={<ArtistsPage />} />
           <Route path="artist/:id" element={<ArtistDetailPage />} />
           <Route path="library/albums" element={<AlbumsPage />} />
