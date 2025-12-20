@@ -39,7 +39,7 @@ export const AudioBadge = ({ song, variant = 'minimal' }: AudioBadgeProps) => {
         else if (bitRate) details.push(`${bitRate}kbps`);
 
         return (
-            <div className="flex flex-col items-start gap-1 ml-2.5 translate-y-[1px]">
+            <div className="flex flex-col items-start gap-1 translate-y-[1px]">
                 <div className={`px-1 rounded-[3px] text-[8px] font-bold tracking-wider leading-none py-[2px] ${miniColor} self-start`}>
                     {miniText}
                 </div>

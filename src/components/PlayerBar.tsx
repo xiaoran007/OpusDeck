@@ -48,15 +48,19 @@ export const PlayerBar = () => {
               {/* Expand/Maximize icon could go here */}
           </div>
         </div>
-        <div className="min-w-0 overflow-hidden flex flex-col justify-center">
-          <div className="flex items-center gap-2 max-w-full">
+        <div className="min-w-0 overflow-hidden flex items-start gap-3">
+          {/* Text Container with Fixed Width to stabilize Badge position */}
+          <div className="flex flex-col justify-center w-[180px]">
             <h4 className="text-sm font-medium text-white truncate" title={currentSong.title}>{currentSong.title}</h4>
-            {/* Audio Quality Badge */}
-            <AudioBadge song={currentSong} variant="minimal" />
+            <p className="text-xs text-neutral-400 truncate hover:text-white transition-colors cursor-pointer" title={currentSong.artist}>
+              {currentSong.artist}
+            </p>
           </div>
-          <p className="text-xs text-neutral-400 truncate hover:text-white transition-colors cursor-pointer" title={currentSong.artist}>
-            {currentSong.artist}
-          </p>
+          
+          {/* Audio Quality Badge - Fixed to the right of the text container */}
+          <div className="flex-shrink-0 pt-[2px]">
+             <AudioBadge song={currentSong} variant="minimal" />
+          </div>
         </div>
       </div>
 
