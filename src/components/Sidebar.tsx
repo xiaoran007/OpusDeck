@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Home, Grid, Music, User, Search, ListMusic } from 'lucide-react';
+import { Home, Grid, Music, User, Search, ListMusic, Server } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
 
@@ -133,22 +133,24 @@ export const Sidebar = () => {
         )}
       </div>
 
-      {/* User Profile Section */}
+      {/* User Profile Section - Fixed height 88px to align with PlayerBar */}
       {isAuthenticated && (
-        <div className="px-3 py-4 border-t border-white/5 mt-auto bg-app-sidebar z-10">
+        <div className="px-3 border-t border-white/5 mt-auto bg-app-sidebar z-10 h-[88px] flex items-center">
             <div 
                 onClick={() => navigate('/settings')}
-                className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors group ${currentPath === '/settings' ? 'bg-white/10' : 'hover:bg-white/5'}`}
+                className={`w-full flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors group ${currentPath === '/settings' ? 'bg-white/10' : 'hover:bg-white/5'}`}
             >
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-neutral-700 to-neutral-800 border border-white/5 flex items-center justify-center text-sm font-bold text-white shrink-0 group-hover:scale-105 transition-transform shadow-sm">
                     {username ? username.charAt(0).toUpperCase() : <User size={16}/>}
                 </div>
                 <div className="flex flex-col overflow-hidden">
-                    <span className="text-sm font-medium text-white truncate">{username || 'User'}</span>
-                    <span className="text-[10px] text-neutral-500 truncate flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"/>
-                        Account Settings
-                    </span>
+                    <span className="text-sm font-medium text-white truncate leading-tight">{username || 'User'}</span>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                        <div className="bg-neutral-700/50 rounded px-1.5 py-0.5 flex items-center gap-1.5 border border-white/5">
+                             <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_4px_rgba(34,197,94,0.4)]" />
+                             <span className="text-[10px] text-neutral-400 font-medium uppercase tracking-wide">Navidrome</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

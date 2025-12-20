@@ -18,7 +18,7 @@ export const AudioBadge = ({ song, variant = 'minimal' }: AudioBadgeProps) => {
     // Heuristic for Hi-Res: > 16bit OR > 48kHz OR > 1500kbps
     const isHiRes = (bitDepth && bitDepth > 16) || (sampleRate && sampleRate > 48000) || (isLossless && bitRate && bitRate > 1500);
 
-    // --- Minimal Variant (Player Bar) ---
+    // Minimal: Used in Player Bar
     // Keep it small and functional
     if (variant === 'minimal') {
         let miniColor = "text-neutral-500 bg-neutral-800";
@@ -39,14 +39,16 @@ export const AudioBadge = ({ song, variant = 'minimal' }: AudioBadgeProps) => {
         else if (bitRate) details.push(`${bitRate}kbps`);
 
         return (
-            <div className="flex items-center gap-1.5 ml-1">
-                <div className={`px-1 rounded-[3px] text-[9px] font-bold tracking-wider leading-none py-[2px] ${miniColor}`}>
+            <div className="flex flex-col items-start gap-1 ml-2.5 translate-y-[1px]">
+                <div className={`px-1 rounded-[3px] text-[8px] font-bold tracking-wider leading-none py-[2px] ${miniColor} self-start`}>
                     {miniText}
                 </div>
-                {/* Optional technical details for the curious, very subtle */}
-                <span className="text-[9px] text-neutral-600 font-medium tabular-nums hidden xl:inline-block">
-                    {details.join(' ')}
-                </span>
+                {/* Show technical details stacked below */}
+                {details.length > 0 && (
+                    <span className="text-[8px] text-neutral-500 font-medium tabular-nums leading-none opacity-80 pl-[1px]">
+                        {details.join(' ')}
+                    </span>
+                )}
             </div>
         );
     }
