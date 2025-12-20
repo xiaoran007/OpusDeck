@@ -4,7 +4,7 @@ import { Music } from 'lucide-react';
 
 export const LoginModal = () => {
   const { login, isAuthenticated } = useAuthStore();
-  const [url, setUrl] = useState('http://localhost:5173'); // Default to local proxy
+  const [url, setUrl] = useState('http://localhost:4533'); // Default to standard Navidrome port
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
