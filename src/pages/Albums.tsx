@@ -50,6 +50,9 @@ export const AlbumsPage = () => {
           <h1 className="text-3xl font-bold tracking-tight text-white mb-1">
             Albums
           </h1>
+          <p className="text-neutral-400 text-sm">
+            All Albums from your server
+          </p>
         </div>
         <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
           {albums.length} Albums (A-Z)

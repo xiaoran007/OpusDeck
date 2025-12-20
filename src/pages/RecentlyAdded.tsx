@@ -52,7 +52,7 @@ export const RecentlyAddedPage = () => {
             {isAuthenticated ? 'Recently Added' : 'Demo Library'}
           </h1>
           <p className="text-neutral-400 text-sm">
-            {isAuthenticated ? 'Your latest collection from Navidrome' : 'Please login to see your music'}
+            {isAuthenticated ? 'Your latest collection from your server' : 'Please login to see your music'}
           </p>
         </div>
         <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">

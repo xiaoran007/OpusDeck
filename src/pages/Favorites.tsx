@@ -3,9 +3,11 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { Album } from '../types';
 import { AlbumCard } from '../components/AlbumCard';
 import { Loader2, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export const FavoritesPage = () => {
   const { client } = useAuthStore();
+  const navigate = useNavigate();
   const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,7 +17,6 @@ export const FavoritesPage = () => {
       try {
         const res = await client.getStarred();
         // Navidrome returns starred albums in res.starred.album
-        // Map to ensure type compatibility if needed, though usually direct mapping works
         const list = (res.starred?.album || []).map((a: any) => ({
             id: a.id,
             title: a.title || a.name, // Sometimes API uses name
@@ -44,14 +45,18 @@ export const FavoritesPage = () => {
   }
 
   return (
-    <div className="p-8 animate-in fade-in duration-500">
-      <header className="mb-8 flex items-center gap-4 border-b border-white/5 pb-6">
-        <div className="w-14 h-14 bg-accent/20 rounded-full flex items-center justify-center text-accent shadow-[0_0_15px_rgba(250,35,59,0.2)]">
-            <Heart size={28} fill="currentColor" />
-        </div>
+    <div className="p-8 max-w-[1920px] mx-auto">
+      <header className="mb-8 flex items-end justify-between border-b border-white/10 pb-4">
         <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">Favorite Albums</h1>
-            <p className="text-neutral-400 mt-1 font-medium">{albums.length} albums</p>
+          <h1 className="text-3xl font-bold tracking-tight text-white mb-1">
+            Favorites
+          </h1>
+          <p className="text-neutral-400 text-sm">
+            Albums you've starred
+          </p>
+        </div>
+        <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
+          {albums.length} Albums
         </div>
       </header>
       
@@ -66,7 +71,11 @@ export const FavoritesPage = () => {
       ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
             {albums.map((album) => (
-              <AlbumCard key={album.id} album={album} />
+              <AlbumCard 
+                key={album.id} 
+                album={album} 
+                onClick={(album) => navigate(`/album/${album.id}`)}
+              />
             ))}
           </div>
       )}
