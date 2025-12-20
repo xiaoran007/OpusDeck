@@ -32,7 +32,7 @@ interface Playlist {
 export const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { client, isAuthenticated } = useAuthStore();
+  const { client, isAuthenticated, username } = useAuthStore();
   
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [searchValue, setSearchValue] = useState('');
@@ -67,7 +67,7 @@ export const Sidebar = () => {
   const currentPath = location.pathname;
 
   return (
-    <div className="w-64 bg-app-sidebar flex-shrink-0 flex flex-col h-full border-r border-app-divider pt-4 pb-20">
+    <div className="w-64 bg-app-sidebar flex-shrink-0 flex flex-col h-full border-r border-app-divider pt-4">
       <div className="px-5 mb-6">
         <div className="relative">
           <Search className="absolute left-3 top-2.5 text-neutral-500" size={16} />
@@ -82,7 +82,7 @@ export const Sidebar = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-2">
+      <div className="flex-1 overflow-y-auto px-2 pb-4">
         <NavItem 
             icon={Home} 
             label="Home" 
@@ -132,6 +132,27 @@ export const Sidebar = () => {
             ))
         )}
       </div>
+
+      {/* User Profile Section */}
+      {isAuthenticated && (
+        <div className="px-3 py-4 border-t border-white/5 mt-auto bg-app-sidebar z-10">
+            <div 
+                onClick={() => navigate('/settings')}
+                className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors group ${currentPath === '/settings' ? 'bg-white/10' : 'hover:bg-white/5'}`}
+            >
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-neutral-700 to-neutral-800 border border-white/5 flex items-center justify-center text-sm font-bold text-white shrink-0 group-hover:scale-105 transition-transform shadow-sm">
+                    {username ? username.charAt(0).toUpperCase() : <User size={16}/>}
+                </div>
+                <div className="flex flex-col overflow-hidden">
+                    <span className="text-sm font-medium text-white truncate">{username || 'User'}</span>
+                    <span className="text-[10px] text-neutral-500 truncate flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"/>
+                        Account Settings
+                    </span>
+                </div>
+            </div>
+        </div>
+      )}
     </div>
   );
 };

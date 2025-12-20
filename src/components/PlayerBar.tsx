@@ -38,7 +38,7 @@ export const PlayerBar = () => {
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-[88px] bg-[#1e1e1e]/85 backdrop-blur-xl border-t border-white/5 px-6 grid grid-cols-3 items-center z-50 select-none">
+    <div className="w-full h-[88px] bg-[#1e1e1e]/95 backdrop-blur-xl border-t border-white/5 px-6 grid grid-cols-3 items-center z-40 select-none flex-shrink-0">
       
       {/* Track Info */}
       <div className="flex items-center space-x-4 min-w-0">
