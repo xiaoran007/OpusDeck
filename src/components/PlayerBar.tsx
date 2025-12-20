@@ -1,5 +1,6 @@
 import React from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2, Repeat, Shuffle, List, Speaker, Loader2 } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, Repeat, Shuffle, List, Speaker, Loader2, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { usePlayerStore } from '../stores/usePlayerStore';
 import { AudioBadge } from './AudioBadge';
 
@@ -11,6 +12,7 @@ const formatTime = (seconds: number) => {
 };
 
 export const PlayerBar = () => {
+  const navigate = useNavigate();
   const { 
     currentAlbum, 
     currentSong, 
@@ -34,6 +36,10 @@ export const PlayerBar = () => {
     const time = parseFloat(e.target.value);
     seek(time); 
   };
+
+  const goToAlbum = () => {
+    if (currentAlbum) navigate(`/album/${currentAlbum.id}`);
+  };
   
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -42,7 +48,10 @@ export const PlayerBar = () => {
       
       {/* Track Info */}
       <div className="flex items-center space-x-4 min-w-0">
-        <div className="w-12 h-12 rounded-md overflow-hidden shadow-md bg-neutral-800 flex-shrink-0 relative group">
+        <div 
+            className="w-12 h-12 rounded-md overflow-hidden shadow-md bg-neutral-800 flex-shrink-0 relative group cursor-pointer"
+            onClick={goToAlbum}
+        >
           <img src={currentAlbum.coverArt} alt="Cover" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/20 hidden group-hover:flex items-center justify-center">
               {/* Expand/Maximize icon could go here */}
@@ -51,7 +60,13 @@ export const PlayerBar = () => {
         <div className="min-w-0 overflow-hidden flex items-start gap-3">
           {/* Text Container with Fixed Width to stabilize Badge position */}
           <div className="flex flex-col justify-center w-[180px]">
-            <h4 className="text-sm font-medium text-white truncate" title={currentSong.title}>{currentSong.title}</h4>
+            <h4 
+                className="text-sm font-medium text-white truncate cursor-pointer hover:underline" 
+                title={currentSong.title} 
+                onClick={goToAlbum}
+            >
+                {currentSong.title}
+            </h4>
             <p className="text-xs text-neutral-400 truncate hover:text-white transition-colors cursor-pointer" title={currentSong.artist}>
               {currentSong.artist}
             </p>
