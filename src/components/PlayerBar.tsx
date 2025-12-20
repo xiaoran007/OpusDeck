@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2, Repeat, Shuffle, List, Speaker, Loader2, Heart } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, Repeat, Shuffle, List, Speaker, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { usePlayerStore } from '../stores/usePlayerStore';
 import { AudioBadge } from './AudioBadge';
