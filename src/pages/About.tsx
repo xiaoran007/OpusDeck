@@ -1,7 +1,7 @@
 import { Music, Github, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const VERSION = 'v0.3.0'; 
+const VERSION = `v${__APP_VERSION__}`; 
 
 export const AboutPage = () => {
   const navigate = useNavigate();

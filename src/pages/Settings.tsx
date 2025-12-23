@@ -107,7 +107,7 @@ const Settings = () => {
             Disconnect from Server
         </button>
         <p className="text-center text-xs text-neutral-500 mt-4">
-            OpusDeck v0.3.0 • Connected to {getServerDomain(url || '')}
+            OpusDeck v{__APP_VERSION__} • Connected to {getServerDomain(url || '')}
         </p>
       </section>
     </div>
