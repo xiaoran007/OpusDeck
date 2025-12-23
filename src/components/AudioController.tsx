@@ -10,7 +10,9 @@ export const AudioController = () => {
     isPlaying, 
     volume,
     seekRequest,
-    next, 
+    next,
+    prev,
+    seek,
     setIsPlaying, 
     setCurrentTime, 
     setDuration,
@@ -134,6 +136,47 @@ export const AudioController = () => {
       audioRef.current.volume = volume;
     }
   }, [volume]);
+
+  // Handle Media Session API
+  useEffect(() => {
+    if (!currentSong || !client || !('mediaSession' in navigator)) return;
+
+    // 1. Set Metadata
+    // Navidrome allows fetching cover art by ID (can be song ID or album ID)
+    // We construct sizes to ensure OS picks the best one
+    const getIcon = (size: number) => ({
+        src: client.getCoverArtUrl(currentSong.id, size),
+        sizes: `${size}x${size}`,
+        type: 'image/jpeg'
+    });
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: currentSong.title,
+      artist: currentSong.artist,
+      album: currentSong.album,
+      artwork: [
+        getIcon(96),
+        getIcon(128),
+        getIcon(192),
+        getIcon(256),
+        getIcon(384),
+        getIcon(512),
+      ]
+    });
+
+    // 2. Set Action Handlers
+    navigator.mediaSession.setActionHandler('play', () => setIsPlaying(true));
+    navigator.mediaSession.setActionHandler('pause', () => setIsPlaying(false));
+    navigator.mediaSession.setActionHandler('previoustrack', () => prev());
+    navigator.mediaSession.setActionHandler('nexttrack', () => next());
+    
+    navigator.mediaSession.setActionHandler('seekto', (details) => {
+        if (details.seekTime !== undefined) {
+            seek(details.seekTime);
+        }
+    });
+
+  }, [currentSong, client, next, prev, setIsPlaying, seek]);
 
   return null;
 };
