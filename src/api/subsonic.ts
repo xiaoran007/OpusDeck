@@ -87,8 +87,8 @@ export class SubsonicClient {
     return this.request<{}>('ping');
   }
 
-  public async getAlbumList(type: 'newest' | 'random' | 'frequent' | 'recent' | 'alphabeticalByName' | 'alphabeticalByArtist' | 'starred' = 'newest', size = 20) {
-    return this.request<{ albumList: { album: any[] } }>('getAlbumList', { type, size });
+  public async getAlbumList(type: 'newest' | 'random' | 'frequent' | 'recent' | 'alphabeticalByName' | 'alphabeticalByArtist' | 'starred' = 'newest', size = 20, offset = 0) {
+    return this.request<{ albumList: { album: any[] } }>('getAlbumList', { type, size, offset });
   }
   
   public async getAlbum(id: string) {
