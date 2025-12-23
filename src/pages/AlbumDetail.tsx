@@ -128,7 +128,7 @@ export const AlbumDetailPage = () => {
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <span className="font-semibold text-lg opacity-0 transition-opacity duration-300" style={{ opacity: 0 }}>
+        <span className="font-semibold text-lg opacity-0 transition-opacity duration-300 truncate" style={{ opacity: 0 }}>
           {album.title}
         </span>
       </div>
@@ -144,7 +144,7 @@ export const AlbumDetailPage = () => {
           {/* Info */}
           <div className="flex flex-col gap-3 pb-2 flex-1 min-w-0">
             <h4 className="text-sm font-medium text-accent uppercase tracking-wider">{album.genre || 'Music'}</h4>
-            <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">{album.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight truncate w-full pb-1" title={album.title}>{album.title}</h1>
             <div className="flex items-center gap-2 text-xl text-white/90">
                <span className="font-medium hover:underline cursor-pointer">{album.artist}</span>
             </div>
