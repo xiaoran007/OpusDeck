@@ -73,4 +73,4 @@ Contributions, bug reports, and feature requests are welcome! Feel free to open 
 
 ## 📄 License
 
-GPL v3
+GPLv3
