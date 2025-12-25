@@ -4,7 +4,7 @@ OpusDeck is a modern, high-fidelity web client for [Navidrome](https://www.navid
 
 Inspired by the clean aesthetics of Apple Music, OpusDeck provides a premium listening experience for your self-hosted library, featuring a glassmorphism UI, gapless-style playback, and deep metadata visualization.
 
-> **Note**: This project is currently in early development (v0.2.0).
+> **Note**: This project is currently in early development (v0.4.0).
 
 ![OpusDeck Screenshot](https://files.catbox.moe/awm89m.png)
 
@@ -28,7 +28,6 @@ The easiest way to run OpusDeck is using Docker.
 1.  Save the following as `docker-compose.yml`:
 
     ```yaml
-    version: "3"
     services:
       navidrome:
         image: deluan/navidrome:latest
@@ -57,7 +56,7 @@ The easiest way to run OpusDeck is using Docker.
 
 2.  Run the stack:
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
 
 3.  Open **`http://localhost:8080`** and log in with your Navidrome credentials.
