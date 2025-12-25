@@ -6,7 +6,7 @@ Inspired by the clean aesthetics of Apple Music, OpusDeck provides a premium lis
 
 > **Note**: This project is currently in early development (v0.2.0).
 
-![OpusDeck Screenshot](https://files.catbox.moe/s8bzu1.png)
+![OpusDeck Screenshot](https://files.catbox.moe/awm89m.png)
 
 ## ✨ Features
 
