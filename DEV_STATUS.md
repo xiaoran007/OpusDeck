@@ -1,56 +1,62 @@
 # Development Status Report - OpusDeck
 
-**Date:** 2025-12-17
-**Status:** Feature Complete (v0.2.0)
-**Branch:** `dev` (Ready for Merge)
+**Date:** 2025-12-20
+**Status:** Beta Release (v0.4.0)
+**Branch:** `dev` (Synched with `main`)
 
 ## 📋 Overview
-OpusDeck is a React-based frontend for Subsonic servers (Navidrome). Following the initial MVP, the **v0.2.0** iteration focused on usability, interaction depth, and visual fidelity, introducing core music player features like Queue Management, Global Search, and Metadata visualization.
+OpusDeck is a high-fidelity, Apple Music-inspired web client for Navidrome/Subsonic servers. 
+The project has reached a stable Beta state (v0.4.0), featuring advanced playback controls, infinite scrolling for large libraries, and comprehensive album favoriting.
 
 ## ✅ Completed Features
 
-### 1. Core Architecture & Auth
-- **Tech Stack**: React, Vite, Tailwind, Zustand, React Router.
-- **API**: Custom `SubsonicClient` with MD5 auth.
-- **DevOps**: Docker Multi-stage build, Nginx SPA config, GitHub Actions CI/CD.
+### 1. Core Architecture
+- **Tech Stack**: React 18, Vite, TypeScript, Tailwind CSS, Zustand.
+- **Audio Engine**: 
+  - Gapless-style HTML5 Audio controller.
+  - **Bit-perfect Playback**: Direct stream support (raw format) for Hi-Res audio.
+  - **Media Session API**: Integration with OS/Browser media controls (play/pause/seek/metadata).
 
-### 2. Playback Engine
-- **Headless Audio Controller**: Robust state management for HTML5 Audio.
-- **Queue Management (New in v0.2.0)**:
-  - `QueueDrawer` component for viewing "Up Next".
-  - Actions: Remove track, Jump to track, Clear queue.
-  - Sidebar/PlayerBar toggle integration.
-- **Controls**: Seek, Volume, Loop/Shuffle (UI only for now), Background play.
+### 2. UI/UX & Layout (Apple Music Style)
+- **Modern Layout**: 
+  - Full-height Sidebar with translucent blurring.
+  - Integrated Player Bar (non-overlay) for stable content viewing.
+- **Visuals**: 
+  - Dark mode glassmorphism design.
+  - **High-Fidelity Audio Badges**: Lossless, Hi-Res (Gold), and Technical Metadata (Bitrate/Sample Rate).
+  - Responsive text truncation and layout stability.
 
-### 3. Library & Discovery
-- **Global Search (New in v0.2.0)**:
-  - Real-time search using Subsonic `search3` endpoint.
-  - Dedicated `SearchPage` displaying Artists, Albums, and Songs.
-  - Smart input clearing on navigation.
-- **Browsing**:
-  - Home (Discovery), Recently Added, Artists Index, Album Details, Playlist Details.
-  - **Playlists**: Full server-side playlist support.
+### 3. Library Management
+- **Browsing**: 
+  - **Infinite Scrolling** for `Albums` page (optimized for large libraries).
+  - `Home` (Dashboard), `Recently Added`, `Artists`, `Playlists`.
+- **Search**: Global search with `search3` endpoint integration.
+- **Favorites**: 
+  - Album-level starring/favoriting.
+  - Dedicated `Favorites` page.
+- **Metadata**: Rich metadata display including Year, Genre, Duration.
 
-### 4. UI/UX Polish
-- **Audio Quality Badges (New in v0.2.0)**:
-  - Apple Music-style metadata visualization.
-  - Dynamic badges for **Lossless**, **Hi-Res** (Gold), and **HQ**.
-  - Displays Bitrate, Bit Depth, and Sample Rate (e.g., "24-bit / 96 kHz") where available.
-- **Visuals**: Dark mode, Glassmorphism, Skeleton-like loading states (text for now).
+### 4. User System
+- **Authentication**: MD5 Subsonic Auth.
+- **User Settings**: 
+  - Dedicated Profile/Settings page.
+  - Server connection details and secure logout.
+  - **About Page**: Project info, automated versioning, and license (GPLv3).
+
+### 5. DevOps & Distribution
+- **Docker**: Multi-arch build (AMD64/ARM64) via GitHub Actions.
+- **CI/CD**: Automatic version injection and tagging workflow.
 
 ## 🚧 Pending / Roadmap
 
-### Phase 3: Personalization & Mobile
-- **Favoriting**: 'Star' functionality for Songs/Albums (API ready, UI pending).
-- **Mobile Responsiveness**: Sidebar needs a hamburger menu/drawer implementation for small screens.
-- **User Settings**: Theme toggles, Transcoding bitrate selection.
-
-### Known Issues / Notes
-- **Large Libraries**: `AlbumsPage` fetches 100 items. Infinite scroll/pagination needed for large collections.
-- **Artist Images**: Currently using placeholders. Needs ID3 or external art fetching logic.
+### Phase 4: Mobile & Polish
+- **Mobile Adaptation**: Responsive Sidebar (Hamburger menu / Drawer) for phone screens.
+- **Playlist Management**: Create, Edit, and Delete playlists.
+- **Lyrics Support**: Display synchronized or plain lyrics from API.
+- **Skeleton Loading**: Improve "Loading..." states with shimmer effects.
 
 ## 📂 Key Files
-- `src/stores/usePlayerStore.ts`: Playback & Queue logic.
-- `src/components/QueueDrawer.tsx`: The new queue UI.
-- `src/components/AudioBadge.tsx`: Audio quality visualization logic.
-- `src/pages/Search.tsx`: Search results aggregation.
+- `src/components/AudioController.tsx`: Core audio logic + Media Session.
+- `src/stores/usePlayerStore.ts`: Global state for playback and queue.
+- `src/pages/Albums.tsx`: Infinite scroll implementation.
+- `src/api/subsonic.ts`: Typed API client.
